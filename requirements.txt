@@ -1,4 +1,4 @@
-Django==1.11.4
+Django==1.11.15
 django-widget-tweaks==1.4.1
 django-admin-view-permission
 django-environ
