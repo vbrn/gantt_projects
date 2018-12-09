@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load form_tags %}
+    {% block title %} Головне Меню {% endblock title%}
+
+    {% block breadcrumb %}
+    <h3>
+    {{ project.name}} (Відповідальний: {{project.responsible}})
+    </h3>
+    {% endblock breadcrumb %}
+    {% block content %}
+
+    <button onclick="myFunction{{project.project.pk}}()" class="btn btn-primary btn-sm">Діаграма Гантта</button>&nbsp;<a role="button" href="{% url 'home'%}" class="btn btn-warning btn-sm">До списку проектів</a><br><br>
+
+<div id="myDIV{{project.project.pk}}" hidden>
+
+        {{script|safe}}
+</div>
+<script>
+function myFunction{{project.project.pk}}() {
+   var x = document.getElementById('myDIV{{project.project.pk}}');
+    if (x.hidden === true) {
+        x.style.display = 'block';
+        x.hidden = false;
+    } else {
+        x.style.display = 'none';
+        x.hidden = true;
+    }
+}
+</script>
+<table class="table table-hover table-bordered table-sm">
+    <thead class="thead-inverse">
+      <tr>
+        <th>Завдання</th>
+        <th><small>Строки / Стан виконання</small></th>
+        <th><small>відповідальний</small></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in project_tasks %}
+        <tr>
+          <td {% if task.status == "c" %} class='table-success' {% endif %}
+          {% if task.status == "n" %} class='table-info' {% endif %}>
+          
+           {% if task.overdue %}
+          <button class="btn btn-outline-dark" id = "button_size" data-toggle="modal" data-target="#myModallg{{forloop.counter}}">
+          {% else %}
+          <button class="btn btn-danger" id = "button_size" data-toggle="modal" data-target="#myModallg{{forloop.counter}}">
+          {% endif %}
+           {{ task.name_task }}
+          </button>
+
+<!-- The Modal -->
+  <div class="modal fade" id="myModallg{{forloop.counter}}">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Завдання {{ forloop.counter }}</h4>
+          <button type="button" class="close" data-dismiss="modal">×</button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+        {{task.text}}
+        {% if not task.text %}
+        Відсутні дані
+        {% endif %}
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрити</button>
+        </div></div></div></div>
+
+
+
+          <td 
+          <td {% if task.status == "c" %} class='table-success'
+          {% elif task.status == "n" %} class='table-info'
+          {% else %}
+          class="align-middle"
+          {% endif %} >
+          
+            <small>
+            {{ task.start|date:'d-m-Y' }} - {{ task.finish|date:'d-m-Y' }}<br>
+                    {{ task.status|dict_status }}<br>
+                    Проміжний контроль: {{ task.promizhny_date }}
+                </small>
+             {% if not task.overdue %}
+            <br><button class="btn btn-dark btn-sm" data-toggle="modal" data-target="#myProstrochena{{forloop.counter}}">ПРОСТРОЧЕНА!</button>
+
+            <!-- The Modal -->
+  <div class="modal fade" id="myProstrochena{{forloop.counter}}">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">ЧОМУ ПРОСТРОЧЕНА:</h4>
+          <button type="button" class="close" data-dismiss="modal">×</button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+            {% if task.overdue_reason %}
+            {{task.overdue_reason}}
+            {% else %}
+            Відсутні дані
+            {% endif %}
+          </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрити</button>
+        </div></div></div></div>
+        
+            {% elif not task.promizhny %}
+            <br><button class="btn btn-danger btn-sm" disabled>На проміжному контролі</button>
+            
+            {% endif %}
+            
+          </td>
+
+          <td 
+          <td {% if task.status == "c" %} class='table-success'
+          {% elif task.status == "n" %} class='table-info'
+          {% else %}
+          class="align-middle"
+          {% endif %} >
+          
+                <small>
+                    {{ task.performer }}
+                </small>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+    {% endblock content %}
+

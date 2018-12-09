@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+    {% block title %} Головне Меню {% endblock title%}
+
+    {% block breadcrumb %}
+    <h3>
+    Список всіх проектів
+    </h3>
+    {% endblock breadcrumb %}
+    {% block content %}
+    
+
+    <table class="table table-hover table-sm">
+    <thead class="thead-inverse">
+      <tr>
+        <th>Проект</th>
+        <th><small>Дата завершення</small></th>
+        <th><small>Виконавець</small></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for project in projects_list %}
+        <tr>
+          <td>
+            <h3> <a id = "button_size" href={% url 'project_detail' project.project.pk %} type="button" 
+            {% if project.overdue_control %}
+            class="btn btn-danger btn-lg"
+            {% else %}
+            class="btn btn-default btn-lg"
+            {% endif %}
+            >  {{project.project.name}}</a></h3>
+
+          </td>
+          <td class="align-middle">
+            <small>
+            {{project.date_finish}}
+            </small>
+            {% if project.overdue_control %}
+            <br><button class="btn btn-dark btn-sm">Є прострочени завдання</button>
+            {% elif project.prom_control %}
+            <br><button class="btn btn-danger btn-sm" disabled>Є завдання на контролі</button>
+    {% endif %}
+            
+          </td>
+          <td class="align-middle">
+            <small>
+            {{project.project.responsible}}
+            </small>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+   
+    {% endblock content %}
+
+

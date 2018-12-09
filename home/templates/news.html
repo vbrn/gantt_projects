@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load form_tags %}
+    {% block title %} Головне Меню {% endblock title%}
+    
+    {% block breadcrumb %}
+    <h3>
+    Новини
+    </h3>
+    {% endblock breadcrumb %}
+
+    {% block content %}
+
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" id="education", alpha="education" data-toggle="tab" href="#" > Освіти</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#" id="science", alpha="science">Науки</a>
+    </li>
+     <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#" id="youth", alpha="youth">Молодь</a>
+    </li>
+     <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#" id="personal", alpha="personal">Персональні</a>
+    </li>
+  </ul>
+
+  <!-- Tab nav -->
+
+<div class="tab-content">
+<!-- Елемент, текст якого буде змінено -->
+<div id="target">{{ begining_news|safe }}</div>
+</div>
+    {% endblock content %}
+{% block javascript %}
+
+
+<script type="text/javascript">
+    // Магія розпочнеться лише після повного завантаження сторінки
+    $(document).ready(function () {
+        // Посилання з id="test" буде тригером події
+        $('#education, #science, #youth, #personal').click(function() {
+            // AJAX-запит на потрібну адресу
+            var key = $(this).attr('alpha');
+            $.ajax({
+        url: "{% url 'ajax_news' %}",
+        data: {
+          'key': key
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data) {
+             $("#target").html(data.param);
+          }
+        }
+      });
+
+    });});
+</script>
+
+
+
+
+
+
+
+
+{% endblock %}
+
+

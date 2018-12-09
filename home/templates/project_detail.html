@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load form_tags %}
+    {% block title %} Головне Меню {% endblock title%}
+{% block additions %} 
+
+      
+{% endblock %}
+
+    {% block breadcrumb %}
+    <h3>
+    {{ project.name}} (Відповідальний: {{project.responsible}})
+    </h3>
+    {% endblock breadcrumb %}
+    {% block content %}
+
+
+<table class="table table-hover table-bordered table-sm" cellpadding="0" cellspacing="0" width="100%" border="0">
+    <thead class="thead-inverse">
+      <tr>
+        <th>Завдання</th>
+        <th><small>Строки / Стан виконання</small></th>
+        <th><small>відповідальний</small></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in project_tasks %}
+        <tr>
+          <td {% if task.status == "c" %} class='table-success'
+          {% elif task.status == "n" %} class='table-info'
+          {% endif %} width="60%">
+          
+          <a type="button" href="#" class="btn btn-light btn-lg" id = "button_size" data-toggle="modal" data-target="#myModallg{{forloop.counter}}">
+           {{ task.name_task }}
+          </a>
+
+<!-- The Modal -->
+  <div class="modal fade" id="myModallg{{forloop.counter}}">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Завдання {{ forloop.counter }}</h4>
+          <button type="button" class="close" data-dismiss="modal">×</button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+        {{task.text}}
+        {% if not task.text %}
+        Відсутні дані
+        {% endif %}
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрити</button>
+        </div></div></div></div>
+
+
+ 
+        <td {% if task.status == "c" %} class='table-success'
+          {% elif task.status == "n" %} class='table-info' 
+          {% endif %} width="25%">
+          
+            <small>
+            {{ task.start|date:'d-m-Y' }} - {{ task.finish|date:'d-m-Y' }}<br>
+                    Контроль: {{ task.promizhny_date }}<br>
+                    {{ task.status|dict_status }}
+                </small>
+             {% if not task.overdue %}
+
+            <!-- The Modal -->
+            <br><button class="btn btn-dark btn-sm" data-toggle="modal" data-target="#myProstrochena{{forloop.counter}}">ПРОСТРОЧЕНА!</button>
+  <div class="modal fade" id="myProstrochena{{forloop.counter}}">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">ЧОМУ ПРОСТРОЧЕНА:</h4>
+          <button type="button" class="close" data-dismiss="modal">×</button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+            {% if task.overdue_reason %}
+            {{task.overdue_reason}}
+            {% else %}
+            Відсутні дані
+            {% endif %}
+          </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрити</button>
+        </div></div></div></div>
+        
+            {% elif not task.promizhny %}
+            <br><button class="btn btn-danger btn-sm" disabled>На проміжному контролі</button>
+            
+            {% endif %}
+            
+          </td>
+
+          <td {% if task.status == "c" %} class='table-success'
+          {% elif task.status == "n" %} class='table-info' 
+          {% endif %} width="15%">
+          
+                <small>
+                    {{ task.performer }}
+                </small>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+ <button onclick="myFunction{{project.project.pk}}()" class="btn btn-primary btn-sm">Діаграма Гантта</button>&nbsp;<a role="button" href="{% url 'home'%}" class="btn btn-warning btn-sm">До списку проектів</a><br><br>
+
+
+
+<div id="myDIV{{project.project.pk}}" hidden>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> 
+<div id="chart_div"></div></div>
+{{ script|safe }}
+<script>
+function myFunction{{project.project.pk}}() {
+   var x = document.getElementById('myDIV{{project.project.pk}}');
+    if (x.hidden === true) {
+        x.style.display = 'block';
+        x.hidden = false;
+    } else {
+        x.style.display = 'none';
+        x.hidden = true;
+    }
+}
+</script>
+
+
+
+    {% endblock content %}
+
