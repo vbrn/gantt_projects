@@ -2,7 +2,7 @@ import feedparser
 
 
 def make_news(key):
-    choice_dic = {"education": 'https://www.google.com/alerts/feeds/14555555114046780351/13329697584533306830', "science": "https://www.google.com/alerts/feeds/14555555114046780351/2259895332053150712", "youth": "https://www.google.com/alerts/feeds/14555555114046780351/16372027772606344783", 'personal': "https://www.google.com/alerts/feeds/14555555114046780351/16001730920443799483", 'personal2': 'https://www.google.com/alerts/feeds/14555555114046780351/12635064269692257481', 'personal3': 'https://www.google.com/alerts/feeds/14555555114046780351/9277687534853782646'}
+    choice_dic = {"education": 'https://www.google.com/alerts/feeds/14555555114046780351/13329697584533306830', "science": "https://www.google.com/alerts/feeds/14555555114046780351/2259895332053150712", "youth": "https://www.google.com/alerts/feeds/14555555114046780351/16372027772606344783", 'personal': "https://www.google.com/alerts/feeds/14555555114046780351/16372027772606344783", 'personal2': 'https://www.google.com/alerts/feeds/14555555114046780351/16372027772606344783', 'personal3': 'https://www.google.com/alerts/feeds/14555555114046780351/16372027772606344783'}
     
     def do_it(key):
         feed = None
@@ -49,7 +49,7 @@ def one_news(key):
     if key in ['education', 'youth', 'science', 'personal']:
         feed = make_news(key)
         param = '<ul class="list-group">'
-        if key == "personal": param += "<small><i>Новини по Довгий С.О., Довгий О.С., МАН, IОД</i></small>"
+        if key == "personal": param += "<small><i>Новини по Персоналіям і назвам (зараз тількі молодь)</i></small>"
         if not feed:
             param += "Нема новин на сьогодні"
         else:
