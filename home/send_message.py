@@ -33,5 +33,3 @@ def send_message():
                     send_mail('Шомісячний Звіт '+datetime.datetime.now().date().isoformat(), MESSAGE.format(user.name_admin, "щомісячний"), 'gantt.manage@gmail.com', [user.email], fail_silently=False)
 
 
-    #send_mail('subject','Звіт '+datetime.datetime.now().ctime(), 'gantt.manage@gmail.com', ['vbrn@i.ua'],fail_silently=False)
-
